@@ -1,0 +1,56 @@
+# todo.py
+import os
+
+TASKS_FILE = "tasks.txt"
+
+def load_tasks():
+    if not os.path.exists(TASKS_FILE):
+        return []
+    with open(TASKS_FILE, "r") as f:
+        return [task.strip() for task in f.readlines()]
+
+def save_tasks(tasks):
+    with open(TASKS_FILE, "w") as f:
+        for task in tasks:
+            f.write(task + "\n")
+
+def show_tasks(tasks):
+    if not tasks:
+        print("No tasks found.")
+    else:
+        for i, task in enumerate(tasks, 1):
+            print(f"{i}. {task}")
+
+def main():
+    tasks = load_tasks()
+
+    while True:
+        print("\n=== To-Do List ===")
+        show_tasks(tasks)
+        print("\nOptions: [A]dd  [R]emove  [Q]uit")
+        choice = input("Choose an option: ").strip().lower()
+
+        if choice == 'a':
+            task = input("Enter a new task: ").strip()
+            if task:
+                tasks.append(task)
+                save_tasks(tasks)
+        elif choice == 'r':
+            try:
+                num = int(input("Enter task number to remove: "))
+                if 1 <= num <= len(tasks):
+                    removed = tasks.pop(num - 1)
+                    print(f"Removed: {removed}")
+                    save_tasks(tasks)
+                else:
+                    print("Invalid task number.")
+            except ValueError:
+                print("Please enter a valid number.")
+        elif choice == 'q':
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice.")
+
+if __name__ == "__main__":
+    main()
